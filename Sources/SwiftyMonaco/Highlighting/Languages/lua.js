@@ -1,10 +1,9 @@
 // This is a comprehensive Monarch language definition for Roblox Luau,
 // structured for clarity and maintainability.
 
-export const robloxLuauLang = {
-    // Set defaultToken to invalid to see what you do not tokenize yet.
+return {    // Set defaultToken to invalid to see what you do not tokenize yet.
     // Otherwise, set to '' to ignore untokenized text.
-    defaultToken: 'invalid',
+    defaultToken: '',
     tokenPostfix: '.lua',
 
     // Keywords of the Luau language
