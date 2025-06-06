@@ -1,10 +1,3 @@
-//
-//  MonacoViewController.swift
-//  
-//
-//  Created by Pavel Kasila on 20.03.21.
-//
-
 #if os(macOS)
 import AppKit
 public typealias ViewController = NSViewController
@@ -33,7 +26,8 @@ public class MonacoViewController: ViewController, WKUIDelegate, WKNavigationDel
         #endif
         view = webView
         #if os(macOS)
-        DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
+        // REMOVED: Observer for macOS interface mode changes to prevent automatic theme switching
+        // DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
         #endif
     }
     public override func viewDidLoad() {
@@ -49,6 +43,9 @@ public class MonacoViewController: ViewController, WKUIDelegate, WKNavigationDel
     }
     
     // MARK: - Dark Mode
+    // This method is called by the system theme change observers, which we are removing.
+    // It can remain if you want to manually call it for other reasons, but it won't
+    // automatically trigger from system theme changes once the observers are gone.
     private func updateTheme() {
         evaluateJavascript("""
         (function(){
@@ -58,14 +55,16 @@ public class MonacoViewController: ViewController, WKUIDelegate, WKNavigationDel
     }
     
     #if os(macOS)
-    @objc private func interfaceModeChanged(sender: NSNotification) {
-        updateTheme()
-    }
+    // REMOVED: @objc func interfaceModeChanged to prevent automatic theme switching on macOS
+    // @objc private func interfaceModeChanged(sender: NSNotification) {
+    //     updateTheme()
+    // }
     #else
-    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        updateTheme()
-    }
+    // REMOVED: traitCollectionDidChange override to prevent automatic theme switching on iOS/iPadOS
+    // public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    //     super.traitCollectionDidChange(previousTraitCollection)
+    //     updateTheme()
+    // }
     #endif
     
     private func detectTheme() -> String {
@@ -122,8 +121,10 @@ public class MonacoViewController: ViewController, WKUIDelegate, WKNavigationDel
         let _fontSize = self.delegate?.monacoView(getFontSize: self)
         let fontSize = "fontSize: \(_fontSize ?? 12)"
         
-        var theme = detectTheme()
+        var theme = detectTheme() // This line will now only detect the initial theme
         
+        // This block will now explicitly set the theme if the delegate provides one (like .dark)
+        // Since you're using .theme(.dark) in SwiftUI, this will ensure "vs-dark" is set.
         if let _theme = self.delegate?.monacoView(getTheme: self) {
             switch _theme {
             case .light:
@@ -213,3 +214,8 @@ public protocol MonacoViewControllerDelegate {
     func monacoView(getTheme controller: MonacoViewController) -> Theme?
     func monacoView(controller: MonacoViewController, textDidChange: String)
 }
+
+
+
+
+
