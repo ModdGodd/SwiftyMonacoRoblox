@@ -1,68 +1,97 @@
-// This is a comprehensive Monarch language definition for Roblox Luau,
-// structured for clarity and maintainability.
-
-return {    // Set defaultToken to invalid to see what you do not tokenize yet.
-    // Otherwise, set to '' to ignore untokenized text.
+// Monarch syntax definition for Roblox Luau + executor environment
+return {
     defaultToken: '',
     tokenPostfix: '.lua',
 
-    // Keywords of the Luau language
+    // Luau keywords
     keywords: [
-        'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function',
-        'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then',
-        'true', 'until', 'while', 'continue', 'export', 'type'
+        'and','break','do','else','elseif','end','false','for','function',
+        'if','in','local','nil','not','or','repeat','return','then',
+        'true','until','while','continue','export','type'
     ],
 
-    // Built-in globals and common Roblox-specific globals
+    // Built-in globals + Roblox globals
     globals: [
-        'game', 'workspace', 'script', 'plugin', '_G', 'shared', 'print', 'warn', 'error',
-        'pcall', 'xpcall', 'typeof', 'assert', 'select', 'ipairs', 'pairs', 'next',
-        'tonumber', 'tostring', 'rawequal', 'rawget', 'rawset', 'getfenv', 'setfenv',
-        'getmetatable', 'setmetatable', 'newproxy', 'os', 'math', 'string', 'table',
-        'coroutine', 'debug', 'utf8', 'task', 'wait', 'delay', 'spawn'
+        '_G','shared','game','workspace','script','plugin',
+        'print','warn','error','assert','pcall','xpcall','typeof','type',
+        'select','ipairs','pairs','next','rawget','rawset','rawequal',
+        'getfenv','setfenv','getmetatable','setmetatable','newproxy',
+        'os','math','string','table','coroutine','debug','utf8',
+        'task','wait','delay','spawn','tick','elapsedTime'
     ],
 
-    // Common Roblox data types and classes
+    // Roblox datatypes
     typeKeywords: [
-        // Primitives
-        'any', 'boolean', 'string', 'number', 'thread', 'userdata', 'void',
-        // Roblox DataTypes
-        'Axes', 'BrickColor', 'CFrame', 'Color3', 'ColorSequence', 'ColorSequenceKeypoint',
-        'DockWidgetPluginGuiInfo', 'Enum', 'EnumItem', 'Faces', 'Instance', 'NumberRange',
-        'NumberSequence', 'NumberSequenceKeypoint', 'PathWaypoint', 'PhysicalProperties', 'Random',
-        'Ray', 'Rect', 'Region3', 'Region3int16', 'TweenInfo', 'UDim', 'UDim2', 'Vector2',
-        'Vector2int16', 'Vector3', 'Vector3int16',
-        // Common Instances
-        'Part', 'Model', 'Script', 'LocalScript', 'ModuleScript', 'RemoteEvent', 'RemoteFunction',
-        'BindableEvent', 'BindableFunction', 'Player', 'Character', 'Humanoid', 'Accessory',
-        'Animation', 'Animator', 'Sound', 'Camera', 'SurfaceGui', 'BillboardGui', 'ScreenGui',
-        'Frame', 'TextLabel', 'TextButton', 'TextBox', 'ImageLabel', 'ImageButton', 'ProximityPrompt',
-        'Configuration', 'ValueBase', 'BoolValue', 'StringValue', 'NumberValue', 'ObjectValue',
-        'CFrameValue', 'Vector3Value', 'RayValue', 'Color3Value', 'BrickColorValue'
+        'any','boolean','string','number','thread','userdata','void',
+        'Axes','BrickColor','CFrame','Color3','ColorSequence','ColorSequenceKeypoint',
+        'DockWidgetPluginGuiInfo','Enum','EnumItem','Faces','Instance','NumberRange',
+        'NumberSequence','NumberSequenceKeypoint','PathWaypoint','PhysicalProperties','Random',
+        'Ray','Rect','Region3','Region3int16','TweenInfo','UDim','UDim2','Vector2',
+        'Vector2int16','Vector3','Vector3int16','DateTime','OverlapParams','RaycastParams',
+        'RaycastResult','ColorSequence','ColorSequenceKeypoint','NumberSequence','NumberSequenceKeypoint',
+        'WorldPivot'
     ],
 
-    // Operators
+    // Roblox Services (explicit list)
+    robloxServices: [
+        'Players','RunService','TweenService','UserInputService','HttpService','SoundService',
+        'MarketplaceService','TeleportService','PathfindingService','BadgeService','DataStoreService',
+        'CollectionService','ReplicatedStorage','ServerScriptService','ServerStorage',
+        'StarterGui','StarterPack','StarterPlayer','Lighting','Teams','Chat','LocalizationService',
+        'ContentProvider','InsertService','NetworkClient','NetworkServer','GuiService','Debris',
+        'ContextActionService','VirtualInputManager','Stats','Workspace','CoreGui','CorePackages',
+        'MessagingService','PhysicsService','PolicyService','ProximityPromptService'
+    ],
+
+    // Executor environment / UNC APIs
+    executorEnv: [
+        'getgenv','getrenv','getsenv','getfenv','setfenv',
+        'checkcaller','getcallingscript',
+        'getidentity','setidentity','getthreadidentity','setthreadidentity',
+        'newcclosure','islclosure','iscclosure',
+        'getgc','getreg','getregistry','getconstants','getupvalues','getprotos',
+        'getloadedmodules','getconnections','gethiddenproperty','sethiddenproperty',
+        'hookfunction','hookmetamethod','unhookmetamethod','clonefunction','decompile',
+        'fireclickdetector','firetouchinterest','firesignal','fireproximityprompt',
+        'identifyexecutor','isexecutorclosure',
+        // File + IO
+        'writefile','readfile','appendfile','delfile','isfile','isfolder','makefolder','listfiles','listfolders',
+        // HTTP + WebSocket
+        'request','http_request','httprequest','syn.request','syn.websocket',
+        // Crypt + Clipboard
+        'crypt','setclipboard','getclipboard',
+        // Console
+        'rconsoleprint','rconsolewarn','rconsoleerr','rconsoleinfo','rconsoleclear',
+        // Input
+        'mouse1click','mouse1press','mouse1release','mouse2click','mouse2press','mouse2release','mousemoveabs','mousemoverel','mousescroll',
+        // Drawing API
+        'Drawing'
+    ],
+
+    // Luau operators
     operators: [
-        '+', '-', '*', '/', '%', '^', '#',
-        '==', '~=', '<=', '>=', '<', '>',
-        '=', '..', '...'
+        '+','-','*','/','%','^','#',
+        '==','~=','<=','>=','<','>',
+        '=','..','...'
     ],
 
-    // Regular expression for symbols
+    // Symbol regex
     symbols: /[=><!~?:&|+\-*\/\^%#]+/,
 
-    // C style string escapes
+    // Escape sequences
     escapes: /\\(?:[abfnrtv\\"']|z\s*|x[0-9A-Fa-f]{2}|u\{[0-9A-Fa-f]+\})/,
 
-    // The main tokenizer
+    // Tokenizer
     tokenizer: {
         root: [
-            // Identifiers and keywords
+            // Identifiers and classification
             [/[a-zA-Z_]\w*/, {
                 cases: {
                     '@keywords': { token: 'keyword.$0' },
                     '@globals': { token: 'variable.predefined' },
                     '@typeKeywords': { token: 'type.identifier' },
+                    '@robloxServices': { token: 'type.class' },
+                    '@executorEnv': { token: 'variable.executor' },
                     '@default': 'identifier'
                 }
             }],
@@ -70,23 +99,20 @@ return {    // Set defaultToken to invalid to see what you do not tokenize yet.
             // Whitespace
             { include: '@whitespace' },
 
-            // Delimiters and operators
+            // Brackets / delimiters
             [/[{}()\[\]]/, '@brackets'],
-            [/[<>](?!@symbols)/, '@brackets'],
             [/@symbols/, {
                 cases: {
                     '@operators': 'operator',
                     '@default': ''
                 }
             }],
+            [/[;,.:]/, 'delimiter'],
 
             // Numbers
             [/\d*\.\d+([eE][\-+]?\d+)?/, 'number.float'],
             [/0[xX][0-9a-fA-F_]+/, 'number.hex'],
             [/\d+/, 'number'],
-
-            // Delimiters
-            [/[;,.:]/, 'delimiter'],
 
             // Strings
             [/"/, 'string', '@string_double'],
@@ -94,34 +120,31 @@ return {    // Set defaultToken to invalid to see what you do not tokenize yet.
             [/\[(=*)\[/, { token: 'string.quote', bracket: '@open', next: '@string_block.$1' }],
         ],
 
-        // Rules for different string types
+        // String states
         string_double: [
             [/[^\\"]+/, 'string'],
             [/@escapes/, 'string.escape'],
             [/\\./, 'string.escape.invalid'],
             [/"/, 'string', '@pop']
         ],
-
         string_single: [
             [/[^\\']+/, 'string'],
             [/@escapes/, 'string.escape'],
             [/\\./, 'string.escape.invalid'],
             [/'/, 'string', '@pop']
         ],
-
         string_block: [
             [/[^\]]+/, 'string'],
             [/\]\1\]/, { token: 'string.quote', bracket: '@close', next: '@pop' }],
             [/\]/, 'string']
         ],
 
-        // Whitespace and comments
+        // Whitespace & comments
         whitespace: [
             [/[ \t\r\n]+/, ''],
             [/--\[(=*)\[/, { token: 'comment', bracket: '@open', next: '@comment_block.$1' }],
             [/--.*$/, 'comment'],
         ],
-
         comment_block: [
             [/[^\]]+/, 'comment'],
             [/\]\1\]/, { token: 'comment', bracket: '@close', next: '@pop' }],
